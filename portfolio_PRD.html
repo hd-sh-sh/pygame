@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포트폴리오 사이트 PRD — 오수진 × 러너메이커</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --ink: #0d1117;
+    --paper: #f7f5f0;
+    --accent: #e85d2f;
+    --accent2: #1a56db;
+    --muted: #6b7280;
+    --border: #d1cfc7;
+    --tag-bg: #eef2ff;
+    --tag-text: #3730a3;
+    --warn-bg: #fff7ed;
+    --warn-border: #fb923c;
+    --code-bg: #1e1e2e;
+    --code-text: #cdd6f4;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  .cover {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 72px 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.12;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--accent2);
+    opacity: 0.10;
+  }
+  .cover-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .cover h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover h1 span { color: var(--accent); }
+  .cover-sub {
+    font-size: 16px;
+    color: #9ca3af;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 40px;
+  }
+  .cover-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    position: relative; z-index: 1;
+  }
+  .cover-tags span {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .toc-bar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 32px;
+  }
+  .toc-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .toc-inner a {
+    display: block;
+    padding: 14px 18px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    text-decoration: none;
+    color: var(--muted);
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+  }
+  .toc-inner a:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+
+  /* ── SECTION ── */
+  .section {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 12px;
+  }
+  .section h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+  .section p {
+    margin-bottom: 14px;
+    color: #374151;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    transition: box-shadow .2s;
+  }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .card-icon { font-size: 24px; margin-bottom: 10px; }
+  .card-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 16px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead { background: var(--ink); color: var(--paper); }
+  thead th { padding: 10px 14px; text-align: left; font-weight: 600; }
+  tbody tr:nth-child(even) { background: rgba(0,0,0,0.03); }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:hover { background: rgba(232,93,47,0.04); }
+
+  /* ── TAG ── */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+    margin: 2px;
+  }
+  .tag.red { background: #fef2f2; color: #b91c1c; }
+  .tag.green { background: #f0fdf4; color: #166534; }
+  .tag.orange { background: #fff7ed; color: #c2410c; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--warn-bg);
+    border-left: 3px solid var(--warn-border);
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    margin: 16px 0;
+    font-size: 13.5px;
+  }
+  .callout strong { color: var(--accent); }
+
+  /* ── CODE ── */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    margin: 16px 0;
+  }
+  code {
+    background: #e5e7eb;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* ── SPEC BOX ── */
+  .spec-box {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+  .spec-box-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 16px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+  .spec-box-body {
+    padding: 16px;
+    background: white;
+  }
+  .spec-row {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0ec;
+    font-size: 13.5px;
+    align-items: flex-start;
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-key { font-weight: 700; min-width: 130px; color: var(--muted); flex-shrink: 0; }
+  .spec-val { color: var(--ink); flex: 1; }
+
+  /* ── ARTIFACT LIST ── */
+  .artifact-list { list-style: none; margin: 12px 0; }
+  .artifact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 13.5px;
+  }
+  .artifact-list li:last-child { border-bottom: none; }
+  .artifact-list .file-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .artifact-list .file-badge.py { background: #2b6cb0; }
+  .artifact-list .file-badge.docx { background: #1a56db; }
+  .artifact-list .file-badge.pdf { background: #be123c; }
+  .artifact-list .file-badge.html { background: #166534; }
+
+  /* ── PAGE WIREFRAME ── */
+  .wireframe {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .wf-bar {
+    background: #e5e7eb;
+    padding: 8px 12px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+  .wf-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .wf-dot.r { background: #f87171; }
+  .wf-dot.y { background: #fbbf24; }
+  .wf-dot.g { background: #34d399; }
+  .wf-content { padding: 20px; }
+  .wf-section {
+    border: 1.5px dashed var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .wf-section strong { display: block; font-size: 13px; color: var(--ink); margin-bottom: 4px; }
+
+  /* ── MILESTONE ── */
+  .milestone-list { list-style: none; margin: 12px 0; }
+  .milestone-list li {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    font-size: 13.5px;
+  }
+  .milestone-list li:last-child { border-bottom: none; }
+  .ms-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .ms-title { font-weight: 700; margin-bottom: 4px; }
+  .ms-desc { color: var(--muted); line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--ink);
+    color: #9ca3af;
+    padding: 32px 48px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ╔══ COVER ══╗ -->
+<div class="cover">
+  <div class="cover-meta">PRD v1.0 · 2026.02 · 러너메이커 팀</div>
+  <h1>러너메이커 <span>포트폴리오</span><br>사이트 기획서</h1>
+  <p class="cover-sub">
+    16주 pygame 러너 게임 5D PBL 프로젝트의 기획·제작·결과물을
+    웹에서 일목요연하게 보여주는 싱글페이지 포트폴리오 사이트 PRD
+  </p>
+  <div class="cover-tags">
+    <span>작성자: 오수진</span>
+    <span>팀: 러너메이커</span>
+    <span>산출물 타입: 정적 웹사이트 (HTML/CSS/JS)</span>
+    <span>배포: GitHub Pages / Vercel</span>
+    <span>문서 버전: v1.0</span>
+  </div>
+</div>
+
+<!-- ╔══ TOC ══╗ -->
+<nav class="toc-bar">
+  <div class="toc-inner">
+    <a href="#overview">1. 개요</a>
+    <a href="#goals">2. 목표 & 성공지표</a>
+    <a href="#artifacts">3. 제작물 목록</a>
+    <a href="#ia">4. 정보구조 & 페이지</a>
+    <a href="#pages">5. 페이지별 명세</a>
+    <a href="#tech">6. 기술 스택</a>
+    <a href="#milestone">7. 개발 마일스톤</a>
+    <a href="#ac">8. 완료 조건</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ╔══ 1. 개요 ══╗ -->
+  <section class="section" id="overview">
+    <div class="section-label">Section 01</div>
+    <h2>프로젝트 개요</h2>
+
+    <p>
+      본 문서는 <strong>오수진</strong>의 16주 pygame 러너 게임 PBL 프로젝트를
+      웹 포트폴리오로 발행하기 위한 Product Requirements Document(PRD)입니다.
+      교육자 PRD 발표자료, 교사용 수업계획서 docx, 완성 게임 코드(python) 등
+      실제 제작물을 모두 담아 <strong>채용 담당자 / 협력 교육기관 / 학부모</strong>에게
+      설득력 있게 전달하는 것이 핵심 목적입니다.
+    </p>
+
+    <div class="spec-box">
+      <div class="spec-box-header">기본 정보</div>
+      <div class="spec-box-body">
+        <div class="spec-row"><span class="spec-key">문서명</span><span class="spec-val">러너메이커 포트폴리오 사이트 PRD</span></div>
+        <div class="spec-row"><span class="spec-key">작성자</span><span class="spec-val">오수진 (팀: 러너메이커 / 공동작업: 이주원)</span></div>
+        <div class="spec-row"><span class="spec-key">대상 독자</span><span class="spec-val">채용 담당자, 교육 파트너, 학부모, 동료 교육자</span></div>
+        <div class="spec-row"><span class="spec-key">사이트 유형</span><span class="spec-val">정적 싱글페이지 포트폴리오 (SPA 없음, 순수 HTML/CSS/JS)</span></div>
+        <div class="spec-row"><span class="spec-key">배포 방법</span><span class="spec-val">GitHub Pages (무료) 또는 Vercel — 커스텀 도메인 선택적 적용</span></div>
+        <div class="spec-row"><span class="spec-key">유지보수 주기</span><span class="spec-val">프로젝트 업데이트 시 수동 배포 (CI/CD 선택적)</span></div>
+      </div>
+    </div>
+
+    <h3>배경 및 필요성</h3>
+    <p>
+      발표자료(PDF)와 코드 파일이 분산되어 있어 외부에 공유하기 어렵습니다.
+      단순한 링크 모음이 아니라, 프로젝트의 <strong>문제 → 설계 → 결과물</strong>이
+      스토리라인으로 흐르는 포트폴리오 페이지가 필요합니다.
+      특히 실제 작동하는 pygame 코드와 수업계획서를 직접 다운로드할 수 있도록
+      해야 신뢰도가 높아집니다.
+    </p>
+  </section>
+
+  <!-- ╔══ 2. 목표 & 성공지표 ══╗ -->
+  <section class="section" id="goals">
+    <div class="section-label">Section 02</div>
+    <h2>목표 &amp; 성공 지표</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">핵심 목표</div>
+        <div class="card-desc">프로젝트의 기획 의도, 교육적 가치, 실제 결과물을 30초 안에 파악할 수 있도록 한다</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📥</div>
+        <div class="card-title">다운로드 허브</div>
+        <div class="card-desc">코드 2종, 수업계획서, PRD 발표자료를 클릭 한 번에 다운로드 가능하게 제공</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📱</div>
+        <div class="card-title">반응형</div>
+        <div class="card-desc">모바일에서도 읽기 편한 레이아웃 — 교육기관 담당자가 스마트폰으로 열람할 것을 고려</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <div class="card-title">공유 가능</div>
+        <div class="card-desc">URL 하나로 공유. 별도 로그인, 플러그인 불필요. 정적 사이트로 영구 호스팅</div>
+      </div>
+    </div>
+
+    <h3>성공 지표 (Acceptance Criteria)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>지표</th><th>기준값</th><th>측정 방법</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>첫 화면 로딩 시간</td><td>LCP ≤ 2.5초</td><td>PageSpeed Insights</td></tr>
+          <tr><td>모바일 가독성</td><td>글자 크기 ≥ 16px, 터치 타깃 ≥ 44px</td><td>Chrome DevTools 모바일 뷰</td></tr>
+          <tr><td>파일 다운로드</td><td>4종 파일 전부 다운로드 가능</td><td>직접 클릭 테스트</td></tr>
+          <tr><td>섹션 탐색</td><td>앵커 링크로 전체 섹션 이동 가능</td><td>클릭 테스트</td></tr>
+          <tr><td>외부인 이해도</td><td>프로젝트 전공 없는 사람도 목적 이해</td><td>사용성 테스트 1회</td></tr>
+          <tr><td>접근성</td><td>이미지 alt 속성, 대비비 4.5:1 이상</td><td>axe DevTools</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ╔══ 3. 제작물 목록 ══╗ -->
+  <section class="section" id="artifacts">
+    <div class="section-label">Section 03</div>
+    <h2>포함 제작물 목록</h2>
+    <p>사이트에 <strong>직접 임베드하거나 다운로드 링크로 제공</strong>할 실제 파일 목록입니다.</p>
+
+    <ul class="artifact-list">
+      <li>
+        <span class="file-badge py">.py</span>
+        <div>
+          <div style="font-weight:700;">bunny_carrot_img.py — 토끼의 당근 모험</div>
+          <div style="color:var(--muted); font-size:13px;">학생 프로젝트 확장 결과물. 이미지 리소스(source/ 폴더) 사용, 당근 수집 시스템, 스토리 내러티브. 12~15주차 최종 산출물 예시.</div>
+          <div style="margin-top:4px;"><span class="tag">다운로드</span> <span class="tag">소스 코드 뷰어(선택)</span></div>
+        </div>
+      </li>
+      <li>
+        <span class="file-badge py">.py</span>
+        <div>
+          <div style="font-weight:700;">runner_game_final_korean_ed.py — 러너 게임 최종 완성판</div>
+          <div style="color:var(--muted); font-size:13px;">5~10차시 TODO 전부 완성된 기준 정답 파일. 한글 폰트, 진한 색상 테마, 디버그 모드, 동적 난이도 포함.</div>
+          <div style="margin-top:4px;"><span class="tag">다운로드</span> <span class="tag">코드 하이라이트 미리보기</span></div>
+        </div>
+      </li>
+      <li>
+        <span class="file-badge docx">.docx</span>
+        <div>
+          <div style="font-weight:700;">16차시_수업계획서_교사용.docx</div>
+          <div style="color:var(--muted); font-size:13px;">차시별 수업 흐름, 배포파일 가이드, 평가 기준, FAQ 포함 교사용 완성 문서.</div>
+          <div style="margin-top:4px;"><span class="tag">다운로드</span></div>
+        </div>
+      </li>
+      <li>
+        <span class="file-badge pdf">.pdf</span>
+        <div>
+          <div style="font-weight:700;">PBL_PRD_발표자료.pdf — 파이썬 PBL 프로젝트 기획서</div>
+          <div style="color:var(--muted); font-size:13px;">36슬라이드 Gamma 발표자료. 문제-목표-타겟-커리큘럼-KPT 회고 포함. 사이트 내 PDF 뷰어 or 다운로드 제공.</div>
+          <div style="margin-top:4px;"><span class="tag">다운로드</span> <span class="tag green">PDF 뷰어 임베드(선택)</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="callout">
+      <strong>파일 호스팅 방법:</strong> GitHub 레포지토리에 파일을 업로드하고 Raw 링크 또는 Releases를 활용합니다.
+      <code>assets/downloads/</code> 폴더를 만들어 정적 파일로 서빙하는 방식을 권장합니다.
+    </div>
+  </section>
+
+  <!-- ╔══ 4. 정보구조 & IA ══╗ -->
+  <section class="section" id="ia">
+    <div class="section-label">Section 04</div>
+    <h2>정보 구조 (IA) &amp; 사이트 맵</h2>
+
+    <p>
+      싱글 페이지(index.html) 구조로 구성합니다. 하위 페이지 없이
+      <strong>섹션 앵커(#)</strong>로 이동하여 유지보수를 단순화합니다.
+    </p>
+
+    <div class="spec-box">
+      <div class="spec-box-header">섹션 구성 — index.html</div>
+      <div class="spec-box-body">
+        <div class="spec-row"><span class="spec-key">#hero</span><span class="spec-val">히어로 섹션 — 프로젝트 이름, 한 줄 소개, 핵심 CTA(다운로드, 상세보기)</span></div>
+        <div class="spec-row"><span class="spec-key">#about</span><span class="spec-val">프로젝트 소개 — 배경(Problem), 목표(Goal), 성공지표(Metric) 3단 카드</span></div>
+        <div class="spec-row"><span class="spec-key">#curriculum</span><span class="spec-val">16주 커리큘럼 — 4단계 타임라인(Foundation / Common MVP / Expansion / Finale) + 차시 테이블</span></div>
+        <div class="spec-row"><span class="spec-key">#pbl</span><span class="spec-val">5D PBL 설명 — Discover~Deliver 5단계 아코디언 또는 탭</span></div>
+        <div class="spec-row"><span class="spec-key">#artifacts</span><span class="spec-val">제작물 쇼케이스 — 4종 파일 카드(아이콘 + 설명 + 다운로드 버튼)</span></div>
+        <div class="spec-row"><span class="spec-key">#code-preview</span><span class="spec-val">코드 미리보기 — syntax highlight된 코드 스니펫 탭(runner / bunny)</span></div>
+        <div class="spec-row"><span class="spec-key">#persona</span><span class="spec-val">타겟 사용자 — 페르소나 2인(김코딩 / 초등생 김러너) 카드</span></div>
+        <div class="spec-row"><span class="spec-key">#kpt</span><span class="spec-val">KPT 회고 — Keep / Problem / Try 3컬럼 카드</span></div>
+        <div class="spec-row"><span class="spec-key">#contact</span><span class="spec-val">연락처 — 이메일 / GitHub / 링크드인 아이콘</span></div>
+      </div>
+    </div>
+
+    <div class="wireframe">
+      <div class="wf-bar">
+        <div class="wf-dot r"></div><div class="wf-dot y"></div><div class="wf-dot g"></div>
+        <span style="margin-left:8px;">runner-maker-portfolio.github.io</span>
+      </div>
+      <div class="wf-content">
+        <div class="wf-section" style="background:#1e1e2e; border-color:#333; color:#cdd6f4;">
+          <strong style="color:#89dceb;">[ Hero ] #hero</strong>
+          이름 · 한 줄 소개 · CTA 버튼(다운로드 / 커리큘럼 보기) · 게임 스크린샷 또는 애니메이션 미리보기
+        </div>
+        <div class="wf-section">
+          <strong>[ About ] #about</strong>
+          Problem(파란 카드) · Goal(주황 카드) · Metrics(초록 카드) — 3열 그리드
+        </div>
+        <div class="wf-section">
+          <strong>[ Curriculum ] #curriculum</strong>
+          Phase 1~4 타임라인 배너 + 차시별 테이블(차시 / 5D단계 / 학습목표 / AC)
+        </div>
+        <div class="wf-section">
+          <strong>[ 5D PBL ] #pbl</strong>
+          Discover / Define / Design / Develop / Deliver 탭 — 각 주차 설명 + 핵심 산출물
+        </div>
+        <div class="wf-section">
+          <strong>[ Artifacts ] #artifacts</strong>
+          파일 4종 카드 그리드 — 아이콘 + 파일명 + 설명 + 다운로드 버튼 (크게 배치)
+        </div>
+        <div class="wf-section">
+          <strong>[ Code Preview ] #code-preview</strong>
+          탭 2개(runner / bunny) — syntax highlight, 주요 함수 설명 툴팁
+        </div>
+        <div class="wf-section">
+          <strong>[ Persona → KPT → Contact ]</strong>
+          타겟 유저 2인 카드 · KPT 회고 3컬럼 · 연락처 푸터
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══ 5. 페이지별 명세 ══╗ -->
+  <section class="section" id="pages">
+    <div class="section-label">Section 05</div>
+    <h2>섹션별 상세 명세</h2>
+
+    <h3>① Hero (#hero)</h3>
+    <div class="spec-box">
+      <div class="spec-box-body">
+        <div class="spec-row"><span class="spec-key">콘텐츠</span><span class="spec-val">프로젝트 제목 "러너메이커 × pygame 5D PBL" · 부제 · 팀원 이름 · 연도</span></div>
+        <div class="spec-row"><span class="spec-key">비주얼</span><span class="spec-val">게임 화면 스크린샷 또는 GIF (runner_game_final 실행 화면) — 우측 배치</span></div>
+        <div class="spec-row"><span class="spec-key">CTA 버튼</span><span class="spec-val">① "제작물 다운로드" → #artifacts 앵커 &nbsp; ② "커리큘럼 보기" → #curriculum 앵커</span></div>
+        <div class="spec-row"><span class="spec-key">배지</span><span class="spec-val">Python · Pygame · 5D PBL · 16주 · 한글 지원 태그 배지 노출</span></div>
+      </div>
+    </div>
+
+    <h3>② 커리큘럼 (#curriculum)</h3>
+    <div class="spec-box">
+      <div class="spec-box-body">
+        <div class="spec-row"><span class="spec-key">타임라인</span><span class="spec-val">Phase 1~4를 수평 타임라인으로 표현. 클릭 시 해당 Phase 세부 내용 펼침</span></div>
+        <div class="spec-row"><span class="spec-key">차시 테이블</span><span class="spec-val">5~10차시 행: 5D단계 / 학습목표 / 배포파일 / 완료조건(AC) 컬럼. 모바일에서 가로 스크롤</span></div>
+        <div class="spec-row"><span class="spec-key">스캐폴딩 다이어그램</span><span class="spec-val">runner_00~05 파일 계층 시각화 (텍스트 아이콘 기반 다이어그램)</span></div>
+      </div>
+    </div>
+
+    <h3>③ 제작물 쇼케이스 (#artifacts)</h3>
+    <div class="spec-box">
+      <div class="spec-box-body">
+        <div class="spec-row"><span class="spec-key">카드 레이아웃</span><span class="spec-val">2열 그리드(모바일 1열). 각 카드에 파일 타입 배지(색 구분), 설명, 다운로드 버튼</span></div>
+        <div class="spec-row"><span class="spec-key">다운로드 버튼</span><span class="spec-val">&lt;a download&gt; 또는 GitHub Raw 링크. 파일명과 크기 표시</span></div>
+        <div class="spec-row"><span class="spec-key">PDF 뷰어</span><span class="spec-val">PRD 발표자료는 &lt;iframe&gt;으로 PDF 임베드 선택 가능 (토글 버튼으로 열기)</span></div>
+        <div class="spec-row"><span class="spec-key">게임 실행 안내</span><span class="spec-val">"실행 방법" 접히는 섹션: pip install pygame → python 파일명.py 안내 코드블록</span></div>
+      </div>
+    </div>
+
+    <h3>④ 코드 미리보기 (#code-preview)</h3>
+    <div class="spec-box">
+      <div class="spec-box-body">
+        <div class="spec-row"><span class="spec-key">라이브러리</span><span class="spec-val">Highlight.js (CDN) 사용. python 언어 모드</span></div>
+        <div class="spec-row"><span class="spec-key">탭 구성</span><span class="spec-val">탭1: runner_game_final (핵심 함수 3~4개 발췌) / 탭2: bunny_carrot (당근 생성 로직 발췌)</span></div>
+        <div class="spec-row"><span class="spec-key">주석 강조</span><span class="spec-val"># [7차시], # [10차시] 형태의 차시 태그가 색상으로 강조되면 이상적</span></div>
+        <div class="spec-row"><span class="spec-key">복사 버튼</span><span class="spec-val">코드블록 우상단에 "복사" 버튼 (navigator.clipboard API)</span></div>
+      </div>
+    </div>
+
+    <h3>⑤ KPT 회고 (#kpt)</h3>
+    <div class="spec-box">
+      <div class="spec-box-body">
+        <div class="spec-row"><span class="spec-key">레이아웃</span><span class="spec-val">Keep(파랑) / Problem(분홍) / Try(주황) 3컬럼 카드. 발표자료 내용 그대로 인용</span></div>
+        <div class="spec-row"><span class="spec-key">작성자별 회고</span><span class="spec-val">오수진 · 이주원 각각 한 줄 회고 텍스트 포함</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══ 6. 기술 스택 ══╗ -->
+  <section class="section" id="tech">
+    <div class="section-label">Section 06</div>
+    <h2>기술 스택 &amp; 구현 지침</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">구현: 순수 HTML / CSS / JS</div>
+        <div class="card-desc">프레임워크 없이 단일 index.html. 빠른 로딩, 의존성 없음. Google Fonts + Highlight.js만 CDN 사용</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎨</div>
+        <div class="card-title">디자인 방향</div>
+        <div class="card-desc">다크/라이트 믹스 — 히어로는 다크 배경, 본문은 밝은 배경. 교육적·신뢰감 있는 톤 (게임처럼 재미있되 전문가스럽게)</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📁</div>
+        <div class="card-title">파일 구조</div>
+        <div class="card-desc"><code>index.html</code> · <code>style.css</code> · <code>main.js</code> · <code>assets/downloads/</code> · <code>assets/images/</code></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <div class="card-title">배포</div>
+        <div class="card-desc">GitHub Pages: 레포 push → Actions 자동 배포. 또는 Vercel drag-and-drop 1분 배포</div>
+      </div>
+    </div>
+
+    <h3>파일 구조 (권장)</h3>
+    <pre>runner-maker-portfolio/
+├── index.html              ← 메인 (싱글 페이지)
+├── style.css               ← 전체 스타일
+├── main.js                 ← 탭/아코디언/스크롤 인터랙션
+├── assets/
+│   ├── downloads/
+│   │   ├── bunny_carrot_img.py
+│   │   ├── runner_game_final_korean_ed.py
+│   │   ├── 16차시_수업계획서_교사용.docx
+│   │   └── PBL_PRD_발표자료.pdf
+│   ├── images/
+│   │   ├── screenshot_runner.png     ← 게임 실행 화면 캡처
+│   │   ├── screenshot_bunny.png
+│   │   └── roadmap.png               ← PRD 발표자료 이미지 추출
+│   └── code-snippets/
+│       ├── runner_snippet.py         ← 미리보기용 발췌 코드
+│       └── bunny_snippet.py
+└── README.md</pre>
+
+    <h3>CDN 의존성</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>라이브러리</th><th>용도</th><th>CDN 링크</th></tr></thead>
+        <tbody>
+          <tr><td>Highlight.js</td><td>코드 syntax highlighting</td><td>cdnjs.cloudflare.com/ajax/libs/highlight.js/</td></tr>
+          <tr><td>Google Fonts</td><td>Noto Sans KR (한글), Space Mono</td><td>fonts.googleapis.com</td></tr>
+          <tr><td>Font Awesome (선택)</td><td>파일 타입 아이콘, 다운로드 아이콘</td><td>cdnjs.cloudflare.com/ajax/libs/font-awesome/</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>⚠ 한글 최적화:</strong> Noto Sans KR을 <code>font-display: swap</code>과 함께 로드해 CLS(레이아웃 이동)를 방지합니다.
+      게임 코드 내 이모지(🐰🥕)는 실제 렌더링 확인이 필요합니다.
+    </div>
+  </section>
+
+  <!-- ╔══ 7. 마일스톤 ══╗ -->
+  <section class="section" id="milestone">
+    <div class="section-label">Section 07</div>
+    <h2>개발 마일스톤</h2>
+
+    <ul class="milestone-list">
+      <li>
+        <span class="ms-num">M1</span>
+        <div>
+          <div class="ms-title">콘텐츠 정리 &amp; 에셋 준비 (0.5일)</div>
+          <div class="ms-desc">
+            다운로드 파일 4종 최종 확인 · 게임 실행 화면 스크린샷 캡처(PNG)
+            · PRD 발표자료에서 타임라인 이미지 추출 · Google Fonts 선택 확정
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="ms-num">M2</span>
+        <div>
+          <div class="ms-title">HTML 골격 &amp; 네비게이션 (0.5일)</div>
+          <div class="ms-desc">
+            index.html 기본 구조 · 스티키 네브바(섹션 링크) · Hero 섹션 레이아웃
+            · assets/downloads/ 폴더에 파일 배치 · 다운로드 링크 테스트
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="ms-num">M3</span>
+        <div>
+          <div class="ms-title">핵심 섹션 구현 (1일)</div>
+          <div class="ms-desc">
+            About(3카드) · Curriculum(타임라인 + 테이블) · 5D PBL 탭 · Artifacts 카드 그리드
+            + 다운로드 버튼 전체 작동 확인
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="ms-num">M4</span>
+        <div>
+          <div class="ms-title">코드 미리보기 &amp; 인터랙션 (0.5일)</div>
+          <div class="ms-desc">
+            Highlight.js 통합 · 탭 2개 구현 · 복사 버튼 · 실행 방법 아코디언
+            · PDF 토글 임베드 · KPT 카드 · Contact 푸터
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="ms-num">M5</span>
+        <div>
+          <div class="ms-title">반응형 &amp; 품질 점검 (0.5일)</div>
+          <div class="ms-desc">
+            모바일 375px · 태블릿 768px · 데스크톱 1280px 브레이크포인트 대응
+            · 접근성(alt, 대비비) · PageSpeed 점검 · 최종 배포(GitHub Pages)
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="callout">
+      <strong>총 예상 시간:</strong> 약 3일 (파트타임 기준 5~7일). Claude로 HTML/CSS 초안 생성 후 수동 조정 권장.
+    </div>
+  </section>
+
+  <!-- ╔══ 8. 완료 조건 ══╗ -->
+  <section class="section" id="ac">
+    <div class="section-label">Section 08</div>
+    <h2>완료 조건 (Acceptance Criteria)</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>완료 조건</th><th>우선순위</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AC-01</td><td>파일 4종(py×2, docx, pdf) 모두 다운로드 버튼으로 정상 수신</td><td><span class="tag red">필수</span></td></tr>
+          <tr><td>AC-02</td><td>네비게이션 클릭 시 해당 섹션으로 부드럽게 스크롤 이동</td><td><span class="tag red">필수</span></td></tr>
+          <tr><td>AC-03</td><td>모바일(375px)에서 텍스트 잘림 없이 전체 섹션 열람 가능</td><td><span class="tag red">필수</span></td></tr>
+          <tr><td>AC-04</td><td>코드 미리보기에서 runner / bunny 탭 전환 정상 작동</td><td><span class="tag red">필수</span></td></tr>
+          <tr><td>AC-05</td><td>Hero 섹션에서 게임 스크린샷 이미지 깨지지 않고 표시</td><td><span class="tag red">필수</span></td></tr>
+          <tr><td>AC-06</td><td>Curriculum 섹션에 5~10차시 내용이 정확히 표시됨</td><td><span class="tag red">필수</span></td></tr>
+          <tr><td>AC-07</td><td>KPT 회고에 오수진, 이주원 개인 회고 텍스트 포함</td><td><span class="tag orange">권장</span></td></tr>
+          <tr><td>AC-08</td><td>PDF 임베드 토글이 정상 열리고 닫힘</td><td><span class="tag orange">권장</span></td></tr>
+          <tr><td>AC-09</td><td>LCP 2.5초 이내 (이미지 압축, 폰트 최적화)</td><td><span class="tag orange">권장</span></td></tr>
+          <tr><td>AC-10</td><td>GitHub Pages URL 공유 후 로그인 없이 접근 가능</td><td><span class="tag red">필수</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>향후 개선(선택 사항)</h3>
+    <p style="margin-bottom:10px;">아래는 v1.0 이후 추가할 수 있는 확장 기능입니다.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>기능</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>Pygame → 브라우저 플레이</td><td>Pygbag 라이브러리로 게임을 WebAssembly 변환해 브라우저 내 플레이 가능하게 임베드</td></tr>
+          <tr><td>다국어(EN)</td><td>영문 토글 버튼 — 해외 채용/협력 기관 대응</td></tr>
+          <tr><td>블로그 섹션</td><td>차시별 제작 일지를 마크다운 기반으로 추가</td></tr>
+          <tr><td>SNS OG 태그</td><td>카카오톡/링크드인 공유 시 썸네일 + 설명 자동 표시</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>
+    <div>러너메이커 포트폴리오 PRD v1.0</div>
+    <div style="margin-top:4px; color:#6b7280;">작성: 오수진 · 팀: 이주원 · 2026년 2월</div>
+  </div>
+  <div style="text-align:right;">
+    <div>참고 산출물: bunny_carrot_img.py · runner_game_final_korean_ed.py</div>
+    <div style="margin-top:4px;">16차시_수업계획서_교사용.docx · PBL_PRD_발표자료.pdf</div>
+  </div>
+</div>
+
+</body>
+</html>
